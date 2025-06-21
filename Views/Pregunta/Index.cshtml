@@ -35,12 +35,12 @@
                         <a class="btn btn-outline-primary btn-sm" asp-action="Visualizar" asp-route-id="@p.Id">
                             <i class="bi bi-eye"></i> Visualizar
                         </a>
-                        <a class="btn btn-outline-success btn-sm" asp-action="Editar" asp-route-id="@p.Id">
+                        <button class="btn btn-outline-success btn-sm" onclick="editarPregunta(@p.Id)">
                             <i class="bi bi-pencil"></i> Editar Pregunta
-                        </a>
-                        <a class="btn btn-outline-danger btn-sm" asp-action="Eliminar" asp-route-id="@p.Id">
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="confirmarEliminarPregunta(@p.Id)">
                             <i class="bi bi-trash"></i> Eliminar Pregunta
-                        </a>
+                        </button>
                     </td>
                 </tr>
             }
@@ -142,6 +142,25 @@
     </div>
 </div>
 
+<!-- Modal Confirmar Eliminación -->
+<div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalEliminarTitulo" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarTitulo">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Deseas eliminar esta pregunta?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="eliminarPregunta()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
 
@@ -231,6 +250,62 @@
                 }
             });
 
+        }
+
+        function editarPregunta(id) {
+            $.get('@Url.Action("ObtenerPregunta", "Pregunta")', { id }, function (r) {
+                if (r.success) {
+                    const p = r.data;
+                    $('#modalPreguntaTitulo').text('Editar pregunta');
+                    $('#preguntaId').val(p.id);
+                    $('#titulo').val(p.titulo);
+                    $('#descripcion').val(p.descripcion);
+                    $('#tipoPregunta').val(p.tipoPreguntaId);
+                    $('#esRequerido').prop('checked', p.esRequerido);
+                    $('#prioridad').val(p.prioridadId);
+                    $('#hipervinculo').val(p.hipervinculo);
+                    $('#agregarComentario').val(p.agregarComentario.toString());
+                    $('#agregarImagen').val(p.agregarImagen.toString());
+                    $('#agregarCamposExtras').val(p.agregarCamposExtras.toString());
+                    $('#opcionesContainer').empty();
+                    if (p.opciones) {
+                        p.opciones.forEach((o, idx) => {
+                            $('#opcionesContainer').append(`
+                                <div class="row opcion-item mb-2">
+                                    <div class="col-6">
+                                        <input type="text" class="form-control" placeholder="Opción" name="opciones[${idx}].Texto" value="${o.texto}" />
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="number" class="form-control" placeholder="Valor" name="opciones[${idx}].Valor" value="${o.valor}" />
+                                    </div>
+                                    <div class="col-2">
+                                        <button class="btn btn-sm btn-danger" type="button" onclick="$(this).closest('.opcion-item').remove()">🗑</button>
+                                    </div>
+                                </div>`);
+                        });
+                    }
+                    $('#modalPregunta').modal('show');
+                } else {
+                    alert(r.error || 'No se pudo cargar la pregunta');
+                }
+            });
+        }
+
+        let preguntaIdEliminar = 0;
+        function confirmarEliminarPregunta(id) {
+            preguntaIdEliminar = id;
+            $('#modalConfirmarEliminar').modal('show');
+        }
+
+        function eliminarPregunta() {
+            $.post('@Url.Action("EliminarPregunta", "Pregunta")', { id: preguntaIdEliminar }, function (r) {
+                if (r.success) {
+                    $('#modalConfirmarEliminar').modal('hide');
+                    location.reload();
+                } else {
+                    alert(r.error || 'Error al eliminar');
+                }
+            });
         }
     </script>
 }

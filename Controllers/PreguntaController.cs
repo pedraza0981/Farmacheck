@@ -144,6 +144,27 @@ namespace Farmacheck.Controllers
 
             return View(pregunta);
         }
+
+        [HttpGet]
+        public JsonResult ObtenerPregunta(int id)
+        {
+            var pregunta = _preguntas.FirstOrDefault(p => p.Id == id);
+            if (pregunta == null)
+                return Json(new { success = false, error = "Pregunta no encontrada" });
+
+            return Json(new { success = true, data = pregunta });
+        }
+
+        [HttpPost]
+        public JsonResult EliminarPregunta(int id)
+        {
+            var pregunta = _preguntas.FirstOrDefault(p => p.Id == id);
+            if (pregunta == null)
+                return Json(new { success = false, error = "Pregunta no encontrada" });
+
+            _preguntas.Remove(pregunta);
+            return Json(new { success = true });
+        }
     }
 
 }
