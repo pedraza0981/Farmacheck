@@ -1,0 +1,51 @@
+﻿@model List<FormularioViewModel>
+@{
+    ViewData["Title"] = "Formularios";
+}
+
+<div class="container mt-4">
+    <h2>Formularios</h2>
+
+    <!-- Buscador -->
+    <form method="get" class="mb-3">
+        <input type="text" name="filtro" class="form-control" placeholder="Buscar..." value="" />
+    </form>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">FORMULARIOS</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">AGRUPAR FORMULARIOS</a>
+        </li>
+    </ul>
+
+    <a asp-controller="Formularios" asp-action="ConfigurarFormulario" class="btn btn-primary mb-3">
+        Agregar Formulario
+    </a>
+
+    <!-- Listado -->
+    <ul class="list-group">
+        @foreach (var f in Model)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="bi @(f.EstaActivo ? "bi-circle-fill text-success" : "bi-circle-fill text-danger") me-2"></i>
+                    <strong>@f.Nombre</strong><br />
+                    <small class="text-muted">desde @f.Fecha.ToShortDateString()</small>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"></button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-action="Previsualizar" asp-route-id="@f.Id">Previsualizar</a></li>
+                        <a class="dropdown-item" asp-action="Construir" asp-route-id="@f.Id">Editar formulario</a>
+                        <a class="dropdown-item" asp-action="ConfigurarSecciones" asp-route-id="@f.Id"><i class="bi bi-gear"></i> Configurar Secciones</a>
+                        <li><a class="dropdown-item" asp-action="Configurar" asp-route-id="@f.Id">Configuración del formulario</a></li>
+                        <li><a class="dropdown-item text-danger" asp-action="Eliminar" asp-route-id="@f.Id">Eliminar formulario</a></li>
+                    </ul>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

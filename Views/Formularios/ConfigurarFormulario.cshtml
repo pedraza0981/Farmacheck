@@ -1,0 +1,227 @@
+﻿@model Farmacheck.Models.FormularioViewModel
+
+@{
+    ViewData["Title"] = "Crear Formulario";
+}
+
+<div class="container-fluid p-4">
+    <h4 class=" text-white p-3 rounded" style="background-color:#0c4c98">Crear Formulario</h4>
+    <form asp-action="ConfigurarFormulario" method="post">
+        <!-- Fila: Nombre - Alias - Etiqueta - Estándar -->
+        <fieldset class="border p-3 mb-4 rounded">
+            <legend class="w-auto px-2 text-secondary">Datos Generales</legend>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Nombre del formulario</label>
+                    <input asp-for="Nombre" class="form-control form-control-ajustada" />
+                </div>
+                <div class="col-md-3">
+                    <label>Alias del formulario</label>
+                    <input asp-for="Alias" class="form-control form-control-ajustada" />
+                </div>
+                <div class="col-md-3">
+                    <label>Etiqueta de campo</label>
+                    <input asp-for="EtiquetaCampo" class="form-control form-control-ajustada" />
+                </div>
+                <div class="col-md-3">
+                    <label>Estándar de la Compañía</label>
+                    <input asp-for="EstandarCompania" type="number" class="form-control form-control-ajustada" />
+                </div>
+            </div>
+        </fieldset>
+        <!-- Fila: Auditor - Auditado - Supervisor - Unidad de Negocio -->
+        <fieldset class="border p-3 mb-4 rounded">
+            <legend class="w-auto px-2 text-secondary">Asignación del formulario</legend>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label>Auditor</label>
+                    @Html.DropDownListFor(m => m.Auditor, Model.AuditoresDisponibles, "-- Seleccione --", new { @class = "form-control form-control-ajustada" })
+                </div>
+                <div class="col-md-3">
+                    <label>Auditado</label>
+                    @Html.DropDownListFor(m => m.Auditado, Model.AuditadosDisponibles, "-- Seleccione --", new { @class = "form-control form-control-ajustada" })
+                </div>
+                <div class="col-md-3">
+                    <label>Supervisor</label>
+                    @Html.DropDownListFor(m => m.Supervisor, Model.SupervisoresDisponibles, "-- Seleccione --", new { @class = "form-control form-control-ajustada" })
+                </div>
+                <div class="col-md-3">
+                    <label>Unidad de Negocio</label>
+                    @Html.DropDownListFor(m => m.UnidadNegocio, Model.UnidadesDisponibles, "-- Seleccione --", new { @class = "form-control form-control-ajustada" })
+                </div>
+            </div>
+        </fieldset>
+
+
+
+        <!-- Fila: Firma obligatoria - Personalizar firmas - Etiqueta 1 - Etiqueta 2 -->
+        <fieldset class="border p-3 mb-4 rounded">
+            <legend class="w-auto px-2 text-secondary">Configuración de firma</legend>
+            <div class="row mb-3 align-items-end">
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="FirmaObligatoria" />
+                        <label class="form-check-label">Firma obligatoria</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="PersonalizarFirmas" />
+                        <label class="form-check-label">Personalizar firmas adicionales</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label>Etiqueta 1</label>
+                    <input asp-for="Etiqueta1" class="form-control form-control-ajustada" />
+                </div>
+                <div class="col-md-3">
+                    <label>Etiqueta 2</label>
+                    <input asp-for="Etiqueta2" class="form-control form-control-ajustada" />
+                </div>
+            </div>
+        </fieldset>
+
+
+
+        <!-- Notificaciones -->
+        <fieldset class="border p-3 mb-4 rounded">
+            <legend class="w-auto px-2 text-secondary">Configuración de Notificaciones</legend>
+
+
+            <!-- Notificación por correo al finalizar revisión -->
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-5 d-flex align-items-center">
+                    <div class="form-check m-0">
+                        <input class="form-check-input" asp-for="NotifCorreoFinRevision" />
+                        <label class="form-check-label ms-2">Notificaciones por correo al finalizar la revisión</label>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <label class="mb-1">Con notificaciones por correo adicionales a:</label>
+                    <input asp-for="CorreosAdicionales" class="form-control form-control-ajustada" />
+                </div>
+            </div>
+            <!-- Notificación por correo debajo del estándar (sin input al lado) -->
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-5 d-flex align-items-center">
+                    <div class="form-check m-0">
+                        <input class="form-check-input" asp-for="NotifCorreoBajoEstandar" />
+                        <label class="form-check-label ms-2">Notificaciones por correo debajo del estándar</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notificación Push + campo adicional -->
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-5 d-flex align-items-center">
+                    <div class="form-check m-0">
+                        <input class="form-check-input" asp-for="NotifPushBajoEstandar" />
+                        <label class="form-check-label ms-2">Notificaciones Push debajo del estándar</label>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <label class="mb-1">Con notificaciones push adicionales a:</label>
+                    <input asp-for="PushAdicionales" class="form-control form-control-ajustada" />
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border p-3 mb-4 rounded">
+            <legend class="w-auto px-2 text-secondary">Personalización de PDF</legend>
+            <!-- PDF -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="SustituirLogoPDF" />
+                        <label class="form-check-label">Sustituir logo en PDF</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="SustituirEmpresaPDF" />
+                        <label class="form-check-label">Sustituir empresa en PDF</label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+
+
+        <!-- Extras -->
+        <fieldset class="border p-3 mb-4 rounded">
+            <legend class="w-auto px-2 text-secondary">Extras</legend>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label>Categoría</label>
+                    <input asp-for="Categoria" class="form-control form-control-ajustada" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="PlanesAccionAutomatico" />
+                        <label class="form-check-label">Carácter Informativo en Auditoría Integral</label>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="CaracterInformativo" />
+                        <label class="form-check-label">Carácter Informativo en Auditoría Integral</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="ActivarGeolocalizacion" />
+                        <label class="form-check-label">Activar geolocalización</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="OcultarTareasPendientes" />
+                        <label class="form-check-label">Ocultar tareas pendientes</label>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="Publicar" />
+                        <label class="form-check-label">Publicar</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="PermitirFotosGaleria" />
+                        <label class="form-check-label">Permitir Fotos desde Galería</label>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="EsconderCalificacion" />
+                        <label class="form-check-label">Esconder Calificación</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="Rutinas" />
+                        <label class="form-check-label">Esconder Calificación</label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Botones -->
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-danger mr-2">GUARDAR</button>
+            <a href="@Url.Action("Index", "Formularios")" class="btn btn-dark">CANCELAR</a>
+        </div>
+    </form>
+</div>
