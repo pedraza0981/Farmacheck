@@ -96,6 +96,11 @@ namespace Farmacheck.Controllers
             return _formularios;
         }
 
+        public static SeccionInputModel? ObtenerSeccionPorId(int id)
+        {
+            return _inMemorySections.FirstOrDefault(s => s.Id == id);
+        }
+
 
 
 
