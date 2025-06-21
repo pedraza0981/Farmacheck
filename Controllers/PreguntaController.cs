@@ -31,12 +31,15 @@ namespace Farmacheck.Controllers
         };
 
 
-        public IActionResult Index(int formularioId)
+        public IActionResult Index(int seccionId)
         {
-            var formulario = _formularios.FirstOrDefault(f => f.Id == formularioId);
+            var seccion = FormulariosController.ObtenerSeccionPorId(seccionId);
+            if (seccion == null) return NotFound();
+            var formulario = _formularios.FirstOrDefault(f => f.Id == seccion.FormularioId);
             if (formulario == null) return NotFound();
 
             ViewBag.FormularioId = formulario.Id;
+            ViewBag.SeccionId = seccion.Id;
             ViewBag.NombreFormulario = formulario.Nombre;
 
             // Catálogos para selects
@@ -44,20 +47,20 @@ namespace Farmacheck.Controllers
             ViewBag.Prioridades = CatalogosStaticos.Prioridades;
 
             var preguntasDelFormulario = _preguntas
-                .Where(p => p.SeccionId == formularioId)
+                .Where(p => p.SeccionId == seccionId)
                 .ToList();
 
             return View(preguntasDelFormulario);
         }
 
 
-        public IActionResult Crear(int formularioId)
+        public IActionResult Crear(int seccionId)
         {
             ViewBag.TiposPregunta = TiposPregunta;
             ViewBag.Prioridades = Prioridades;
-            ViewBag.FormularioId = formularioId;
+            ViewBag.FormularioId = seccionId;
 
-            return View(new PreguntaViewModel { SeccionId = formularioId });
+            return View(new PreguntaViewModel { SeccionId = seccionId });
         }
 
         [HttpPost]
@@ -113,7 +116,7 @@ namespace Farmacheck.Controllers
             original.Titulo = model.Titulo;
             original.TipoPregunta = model.TipoPregunta;
 
-            return RedirectToAction("Index", new { formularioId = model.SeccionId });
+            return RedirectToAction("Index", new { seccionId = model.SeccionId });
         }
 
         public IActionResult Eliminar(int id)
@@ -131,7 +134,7 @@ namespace Farmacheck.Controllers
             if (pregunta != null)
                 _preguntas.Remove(pregunta);
 
-            return RedirectToAction("Index", new { formularioId = pregunta?.SeccionId });
+            return RedirectToAction("Index", new { seccionId = pregunta?.SeccionId });
         }
 
         public IActionResult Visualizar(int id)
