@@ -3,49 +3,91 @@
     ViewData["Title"] = "Formularios";
 }
 
-<div class="container mt-4">
-    <h2>Formularios</h2>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-dark">Formularios</h4>
+        <a asp-controller="Formularios" asp-action="ConfigurarFormulario" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Agregar Formulario
+        </a>
+    </div>
 
-    <!-- Buscador -->
-    <form method="get" class="mb-3">
-        <input type="text" name="filtro" class="form-control" placeholder="Buscar..." value="" />
-    </form>
-
-    <!-- Tabs -->
-    <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">FORMULARIOS</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">AGRUPAR FORMULARIOS</a>
-        </li>
-    </ul>
-
-    <a asp-controller="Formularios" asp-action="ConfigurarFormulario" class="btn btn-primary mb-3">
-        Agregar Formulario
-    </a>
-
-    <!-- Listado -->
-    <ul class="list-group">
-        @foreach (var f in Model)
-        {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <i class="bi @(f.EstaActivo ? "bi-circle-fill text-success" : "bi-circle-fill text-danger") me-2"></i>
-                    <strong>@f.Nombre</strong><br />
-                    <small class="text-muted">desde @f.Fecha.ToShortDateString()</small>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"></button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" asp-action="Previsualizar" asp-route-id="@f.Id">Previsualizar</a></li>
-                        <a class="dropdown-item" asp-action="Construir" asp-route-id="@f.Id">Editar formulario</a>
-                        <a class="dropdown-item" asp-action="ConfigurarSecciones" asp-route-id="@f.Id"><i class="bi bi-gear"></i> Configurar Secciones</a>
-                        <li><a class="dropdown-item" asp-action="Configurar" asp-route-id="@f.Id">Configuración del formulario</a></li>
-                        <li><a class="dropdown-item text-danger" asp-action="Eliminar" asp-route-id="@f.Id">Eliminar formulario</a></li>
-                    </ul>
-                </div>
-            </li>
-        }
-    </ul>
+    <table class="table table-bordered custom-table" id="tablaFormularios">
+        <thead>
+            <tr>
+                <th style="width: 10%;">Id</th>
+                <th style="width: 30%;">Nombre</th>
+                <th style="width: 20%;">Fecha</th>
+                <th style="width: 10%;">Publicar</th>
+                <th style="width: 30%;" class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
+
+
+
+@* <a asp-controller="Formularios" asp-action="ConfigurarFormulario" class="btn btn-primary mb-3">
+    Agregar Formulario
+</a> *@
+
+@section Scripts {
+    <script>
+            const urlPreview = '@Url.Action("Previsualizar", "Formularios")';
+            const urlConstruir = '@Url.Action("Construir", "Formularios")';
+            const urlSecciones = '@Url.Action("ConfigurarSecciones", "Formularios")';
+            const urlConfigurar = '@Url.Action("Configurar", "Formularios")';
+
+        $(document).ready(function () {
+               cargarFormularios();
+               $('#tablaFormularios').DataTable();
+           });
+
+          function cargarFormularios() {
+                $.get('@Url.Action("ListarFormularios", "Formularios")', function (r) {
+                    if (r.success) {
+                        const tbody = $('#tablaFormularios tbody');
+                        tbody.empty();
+                        r.formularios.forEach(f => {
+                            tbody.append(`
+                                <tr>
+                                    <td>${f.id}</td>
+                                    <td>${f.nombre}</td>
+                                    <td>${f.fecha}</td>
+                                    <td>${f.publicar ? 'Sí' : 'No'}</td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-outline-primary btn-sm" href="${urlPreview}/${f.id}">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a class="btn btn-outline-success btn-sm" href="${urlConstruir}/${f.id}">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-outline-secondary btn-sm" href="${urlSecciones}/${f.id}">
+                                                <i class="bi bi-gear"></i>
+                                            </a>
+                                            <a class="btn btn-outline-warning btn-sm" href="${urlConfigurar}/${f.id}">
+                                                <i class="bi bi-sliders"></i>
+                                            </a>
+                                            <button class="btn btn-outline-danger btn-sm" onclick="eliminarFormulario(${f.id})">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+                    }
+                });
+                    function eliminarFormulario(id) {
+                    if (!confirm('¿Deseas eliminar este formulario?')) return;
+                    $.post('@Url.Action("EliminarFormulario", "Formularios")', { id }, function (r) {
+                        if (r.success) {
+                            cargarFormularios();
+                        } else {
+                            alert(r.error || 'Error al eliminar');
+                        }
+                    });
+                }
+    </script>
+}

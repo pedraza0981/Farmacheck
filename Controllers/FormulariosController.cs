@@ -22,14 +22,9 @@ namespace Farmacheck.Controllers
         };
 
         // GET: /Formularios
-        public IActionResult Index(string filtro)
+        public IActionResult Index()
         {
-            var listaFiltrada = string.IsNullOrWhiteSpace(filtro)
-                ? _formularios
-                : _formularios.Where(f => f.Nombre.Contains(filtro, StringComparison.OrdinalIgnoreCase)).ToList();
-
-
-            return View(listaFiltrada);
+            return View();
         }
 
         [HttpGet]
@@ -264,6 +259,31 @@ namespace Farmacheck.Controllers
             _formularios.Add(modelo);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public JsonResult ListarFormularios()
+        {
+            var lista = _formularios.Select(f => new
+            {
+                f.Id,
+                f.Nombre,
+                Fecha = f.Fecha.ToString("yyyy-MM-dd"),
+                f.Publicar
+            }).ToList();
+
+            return Json(new { success = true, formularios = lista });
+        }
+
+        [HttpPost]
+        public JsonResult EliminarFormulario(int id)
+        {
+            var formulario = _formularios.FirstOrDefault(f => f.Id == id);
+            if (formulario == null)
+                return Json(new { success = false, error = "Formulario no encontrado" });
+
+            _formularios.Remove(formulario);
+            return Json(new { success = true });
         }
     }
 }
