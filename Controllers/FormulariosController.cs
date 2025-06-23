@@ -210,56 +210,61 @@ namespace Farmacheck.Controllers
             return Json(new { success = true, newId = m.Id });
         }
 
-        // GET: /Formularios/ConfigurarFormulario
-        [HttpGet]
+        private void CargarListasComunes(FormularioViewModel formulario)
+        {
+            formulario.AuditoresDisponibles = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "auditor1", Text = "Auditor 1" },
+                new SelectListItem { Value = "auditor2", Text = "Auditor 2" }
+            };
+
+                    formulario.AuditadosDisponibles = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "auditado1", Text = "Auditado 1" },
+                new SelectListItem { Value = "auditado2", Text = "Auditado 2" }
+            };
+
+                    formulario.SupervisoresDisponibles = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "supervisor1", Text = "Supervisor 1" },
+                new SelectListItem { Value = "supervisor2", Text = "Supervisor 2" }
+            };
+
+                    formulario.UnidadesDisponibles = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "ventas", Text = "Ventas" },
+                new SelectListItem { Value = "almacen", Text = "Almacén" },
+                new SelectListItem { Value = "admin", Text = "Administración" }
+            };
+        }
+
+        // GET: /Formularios/ConfigurarFormulario        
         [HttpGet]
         public IActionResult ConfigurarFormulario(int? id)
         {
-            FormularioViewModel nuevoFormulario = new FormularioViewModel();
+            FormularioViewModel formulario;
 
             if (id.HasValue)
             {
-                var formulario = _formularios.FirstOrDefault(f => f.Id == id.Value);
+                formulario = _formularios.FirstOrDefault(f => f.Id == id.Value);
 
                 if (formulario != null)
                 {
+                    CargarListasComunes(formulario); // <-- Cargar listas al editar
                     ViewData["Title"] = "Editar Formulario";
                     return View(formulario);
                 }
             }
 
-            if (nuevoFormulario != null)
+            formulario = new FormularioViewModel
             {
-                nuevoFormulario = new FormularioViewModel
-                {
-                    Fecha = DateTime.Now,
-                    EstaActivo = true,
-                    AuditoresDisponibles = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = "auditor1", Text = "Auditor 1" },
-                        new SelectListItem { Value = "auditor2", Text = "Auditor 2" }
-                    },
-                            AuditadosDisponibles = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = "auditado1", Text = "Auditado 1" },
-                        new SelectListItem { Value = "auditado2", Text = "Auditado 2" }
-                    },
-                            SupervisoresDisponibles = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = "supervisor1", Text = "Supervisor 1" },
-                        new SelectListItem { Value = "supervisor2", Text = "Supervisor 2" }
-                    },
-                            UnidadesDisponibles = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = "ventas", Text = "Ventas" },
-                        new SelectListItem { Value = "almacen", Text = "Almacén" },
-                        new SelectListItem { Value = "admin", Text = "Administración" }
-                    }
-                };
-            }
+                Fecha = DateTime.Now,
+                EstaActivo = true
+            };
 
+            CargarListasComunes(formulario); // <-- Cargar listas al crear nuevo
             ViewData["Title"] = "Crear Formulario";
-            return View(nuevoFormulario);
+            return View(formulario);
         }
 
 
