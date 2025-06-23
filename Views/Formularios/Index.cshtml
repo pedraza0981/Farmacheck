@@ -77,7 +77,7 @@
 
                    const params = new URLSearchParams(window.location.search);
                    if (params.get('mensaje') === 'guardado') {
-                       alert('Formulario guardado correctamente');
+                       showAlert('Formulario guardado correctamente', 'success');
                    }
             });
 
@@ -116,13 +116,15 @@
         }
 
         function eliminarFormulario(id) {
-            if (!confirm('¿Deseas eliminar este formulario?')) return;
-            $.post('@Url.Action("EliminarFormulario", "Formularios")', { id }, function (r) {
-                if (r.success) {
-                    cargarFormularios();
-                } else {
-                    alert(r.error || 'Error al eliminar');
-                }
+             confirmAction('¿Deseas eliminar este formulario?').then(function (ok) {
+                if (!ok) return;
+                $.post('@Url.Action("EliminarFormulario", "Formularios")', { id }, function (r) {
+                    if (r.success) {
+                        cargarFormularios();
+                    } else {
+                        showAlert(r.error || 'Error al eliminar', 'error');
+                    }
+                });
             });
         }
     </script>

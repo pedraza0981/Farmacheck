@@ -131,4 +131,7 @@ label {
     background-color: #06264c !important;
     --bs-bg-opacity: 1;
 }
+.swal2-popup {
+    --swal2-confirm-button-background-color: #005bac !important;
+}
 

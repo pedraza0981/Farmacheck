@@ -292,7 +292,7 @@
                         $('#EsconderCalificacion').prop('checked', f.esconderCalificacion);
                         $('#Rutinas').val(f.rutinas);
                     } else {
-                        alert('No se encontró el formulario');
+                        showAlert('No se encontró el formulario', 'error');
                     }
                 });
             }
@@ -341,7 +341,7 @@
                         $('#mensajeGuardado').text(r.message);
                         $('#modalGuardado').modal('show');
                     } else {
-                        alert(r.error || 'Error al guardar');
+                        showAlert(r.error || 'Error al guardar', 'error');
                     }
                 }
             });

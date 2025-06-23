@@ -111,7 +111,7 @@
                             $('#modalSeccion').modal('hide');
                             cargarSecciones();
                         } else {
-                            alert(r.error || "Error al guardar");
+                            showAlert(r.error || "Error al guardar", 'error');
                         }
                     }
                 });
@@ -167,19 +167,21 @@
                     $('#rangoRojo').val(s.rangoRojo);
                     $('#modalSeccion').modal('show');
                 } else {
-                    alert(r.error || "No se pudo cargar la sección");
+                    showAlert(r.error || "No se pudo cargar la sección", 'error');
                 }
             });
         }
 
         function eliminarSeccion(id) {
-            if (!confirm("¿Estás seguro de que deseas eliminar esta sección?")) return;
-            $.post('@Url.Action("EliminarSeccion", "Formularios")', { id }, function (r) {
-                if (r.success) {
-                    cargarSecciones();
-                } else {
-                    alert(r.error || "Error al eliminar");
-                }
+             confirmAction("¿Estás seguro de que deseas eliminar esta sección?").then(function (ok) {
+                if (!ok) return;
+                $.post('@Url.Action("EliminarSeccion", "Formularios")', { id }, function (r) {
+                    if (r.success) {
+                        cargarSecciones();
+                    } else {
+                        showAlert(r.error || "Error al eliminar", 'error');
+                    }
+                });
             });
         }
 

@@ -246,7 +246,7 @@
                     $('#modalPregunta').modal('hide');
                     location.reload(); // recarga o llama función
                 } else {
-                    alert(r.error || "Error al guardar la pregunta");
+                    showAlert(r.error || "Error al guardar la pregunta", 'error');
                 }
             });
 
@@ -286,7 +286,7 @@
                     }
                     $('#modalPregunta').modal('show');
                 } else {
-                    alert(r.error || 'No se pudo cargar la pregunta');
+                    showAlert(r.error || 'No se pudo cargar la pregunta', 'error');
                 }
             });
         }
@@ -303,7 +303,7 @@
                     $('#modalConfirmarEliminar').modal('hide');
                     location.reload();
                 } else {
-                    alert(r.error || 'Error al eliminar');
+                    showAlert(r.error || 'Error al eliminar', 'error');
                 }
             });
         }

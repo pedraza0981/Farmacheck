@@ -194,7 +194,7 @@
           const rangoRojo     = document.getElementById('nuevaSeccionRangoRojo').value.trim();
 
           if (!titulo) {
-            alert('El título de la sección es obligatorio');
+            showAlert('El título de la sección es obligatorio', 'warning');
             return;
           }
 
@@ -221,8 +221,8 @@
             const json = await response.json();
 
             if (!json.success) {
-              alert(json.error);
-              return;
+                showAlert(json.error, 'error');
+                return;
             }
 
             // 4) Usamos el newId que devuelve el servidor para generar IDs únicos
@@ -297,7 +297,7 @@
           }
           catch (e) {
             console.error(e);
-            alert('Error en la petición AJAX.');
+            showAlert('Error en la petición AJAX.', 'error');
           }
         }
 
@@ -315,7 +315,7 @@
         }
 
         function descargarSeccion(seccionId) {
-            alert("Función Descargar/Eliminar sección " + seccionId + " (a implementar)");
+            showAlert("Función Descargar/Eliminar sección " + seccionId + " (a implementar)");
         }
     </script>
 }
