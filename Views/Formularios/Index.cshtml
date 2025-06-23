@@ -34,7 +34,7 @@
                             <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Previsualizar", "Formularios", new { id = f.Id })">
                                 <i class="bi bi-eye"></i>
                             </a>
-                            <a class="btn btn-outline-success btn-sm" href="@Url.Action("Construir", "Formularios", new { id = f.Id })">
+                            <a class="btn btn-outline-success btn-sm" href="@Url.Action("ConfigurarFormulario", "Formularios", new { id = f.Id })">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <a class="btn btn-outline-secondary btn-sm" href="@Url.Action("ConfigurarSecciones", "Formularios", new { id = f.Id })">
@@ -66,6 +66,8 @@
             const urlConstruir = '@Url.Action("Construir", "Formularios")';
             const urlSecciones = '@Url.Action("ConfigurarSecciones", "Formularios")';
             const urlConfigurar = '@Url.Action("Configurar", "Formularios")';
+            const urlFormulario = '@Url.Action("ConfigurarFormulario", "Formularios")';
+
 
             let tabla;
 
@@ -87,7 +89,7 @@
                                 <a class="btn btn-outline-primary btn-sm" href="${urlPreview}/${f.id}">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                <a class="btn btn-outline-success btn-sm" href="${urlConstruir}/${f.id}">
+                                <a class="btn btn-outline-success btn-sm" href="${urlFormulario}?id=${f.id}">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <a class="btn btn-outline-secondary btn-sm" href="${urlSecciones}/${f.id}">
