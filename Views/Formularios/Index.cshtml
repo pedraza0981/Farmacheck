@@ -21,7 +21,36 @@
                 <th style="width: 30%;" class="text-center">Acciones</th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            @foreach (var f in Model)
+            {
+                <tr>
+                    <td>@f.Id</td>
+                    <td>@f.Nombre</td>
+                    <td>@f.Fecha.ToString("yyyy-MM-dd")</td>
+                    <td>@(f.Publicar ? "Sí" : "No")</td>
+                    <td class="text-center">
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Previsualizar", "Formularios", new { id = f.Id })">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a class="btn btn-outline-success btn-sm" href="@Url.Action("Construir", "Formularios", new { id = f.Id })">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a class="btn btn-outline-secondary btn-sm" href="@Url.Action("ConfigurarSecciones", "Formularios", new { id = f.Id })">
+                                <i class="bi bi-gear"></i>
+                            </a>
+                            <a class="btn btn-outline-warning btn-sm" href="@Url.Action("Configurar", "Formularios", new { id = f.Id })">
+                                <i class="bi bi-sliders"></i>
+                            </a>
+                            <button class="btn btn-outline-danger btn-sm" onclick="eliminarFormulario(@f.Id)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>
 
@@ -38,56 +67,55 @@
             const urlSecciones = '@Url.Action("ConfigurarSecciones", "Formularios")';
             const urlConfigurar = '@Url.Action("Configurar", "Formularios")';
 
-        $(document).ready(function () {
-               cargarFormularios();
-               $('#tablaFormularios').DataTable();
-           });
+            let tabla;
 
-          function cargarFormularios() {
-                $.get('@Url.Action("ListarFormularios", "Formularios")', function (r) {
-                    if (r.success) {
-                        const tbody = $('#tablaFormularios tbody');
-                        tbody.empty();
-                        r.formularios.forEach(f => {
-                            tbody.append(`
-                                <tr>
-                                    <td>${f.id}</td>
-                                    <td>${f.nombre}</td>
-                                    <td>${f.fecha}</td>
-                                    <td>${f.publicar ? 'Sí' : 'No'}</td>
-                                    <td class="text-center">
-                                        <div class="btn-group" role="group">
-                                            <a class="btn btn-outline-primary btn-sm" href="${urlPreview}/${f.id}">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <a class="btn btn-outline-success btn-sm" href="${urlConstruir}/${f.id}">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a class="btn btn-outline-secondary btn-sm" href="${urlSecciones}/${f.id}">
-                                                <i class="bi bi-gear"></i>
-                                            </a>
-                                            <a class="btn btn-outline-warning btn-sm" href="${urlConfigurar}/${f.id}">
-                                                <i class="bi bi-sliders"></i>
-                                            </a>
-                                            <button class="btn btn-outline-danger btn-sm" onclick="eliminarFormulario(${f.id})">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `);
-                        });
-                    }
-                });
-                    function eliminarFormulario(id) {
-                    if (!confirm('¿Deseas eliminar este formulario?')) return;
-                    $.post('@Url.Action("EliminarFormulario", "Formularios")', { id }, function (r) {
-                        if (r.success) {
-                            cargarFormularios();
-                        } else {
-                            alert(r.error || 'Error al eliminar');
-                        }
+            $(document).ready(function () {
+                   tabla = $('#tablaFormularios').DataTable();
+            });
+
+            function cargarFormularios() {
+            $.get('@Url.Action("ListarFormularios", "Formularios")', function (r) {
+                if (r.success) {
+                    tabla.clear();
+                    r.formularios.forEach(f => {
+                        tabla.row.add([
+                            f.id,
+                            f.nombre,
+                            f.fecha,
+                            f.publicar ? 'Sí' : 'No',
+                            `<div class="btn-group" role="group">
+                                <a class="btn btn-outline-primary btn-sm" href="${urlPreview}/${f.id}">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a class="btn btn-outline-success btn-sm" href="${urlConstruir}/${f.id}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a class="btn btn-outline-secondary btn-sm" href="${urlSecciones}/${f.id}">
+                                    <i class="bi bi-gear"></i>
+                                </a>
+                                <a class="btn btn-outline-warning btn-sm" href="${urlConfigurar}/${f.id}">
+                                    <i class="bi bi-sliders"></i>
+                                </a>
+                                <button class="btn btn-outline-danger btn-sm" onclick="eliminarFormulario(${f.id})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>`
+                        ]);
                     });
+                    tabla.draw();
                 }
+            });
+        }
+
+        function eliminarFormulario(id) {
+            if (!confirm('¿Deseas eliminar este formulario?')) return;
+            $.post('@Url.Action("EliminarFormulario", "Formularios")', { id }, function (r) {
+                if (r.success) {
+                    cargarFormularios();
+                } else {
+                    alert(r.error || 'Error al eliminar');
+                }
+            });
+        }
     </script>
 }

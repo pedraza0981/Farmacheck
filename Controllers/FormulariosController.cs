@@ -24,7 +24,7 @@ namespace Farmacheck.Controllers
         // GET: /Formularios
         public IActionResult Index()
         {
-            return View();
+            return View(_formularios);
         }
 
         [HttpGet]
