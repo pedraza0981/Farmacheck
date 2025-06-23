@@ -236,6 +236,22 @@
 
         </div>
     </form>
+    <!-- Modal de guardado -->
+    <div class="modal fade" id="modalGuardado" tabindex="-1" aria-labelledby="modalGuardadoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary_form text-white">
+                    <h5 class="modal-title" id="modalGuardadoLabel">Formulario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="mensajeGuardado"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnAceptarGuardado">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @section Scripts {
     <script>
@@ -322,12 +338,17 @@
                 data: JSON.stringify(data),
                 success: function (r) {
                     if (r.success) {
-                        window.location.href = '@Url.Action("Index", "Formularios")?mensaje=guardado';
+                        $('#mensajeGuardado').text(r.message);
+                        $('#modalGuardado').modal('show');
                     } else {
                         alert(r.error || 'Error al guardar');
                     }
                 }
             });
+        });
+
+        $('#btnAceptarGuardado').click(function () {
+            window.location.href = '@Url.Action("Index", "Formularios")';
         });
     </script>
 }
