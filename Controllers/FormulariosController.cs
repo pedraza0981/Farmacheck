@@ -294,6 +294,16 @@ namespace Farmacheck.Controllers
             return Json(new { success = true, formularios = lista });
         }
 
+        [HttpGet]
+        public JsonResult ObtenerFormulario(int id)
+        {
+            var formulario = _formularios.FirstOrDefault(f => f.Id == id);
+            if (formulario == null)
+                return Json(new { success = false });
+
+            return Json(new { success = true, data = formulario });
+        }
+
         [HttpPost]
         public JsonResult GuardarFormulario([FromBody] FormularioViewModel model)
         {

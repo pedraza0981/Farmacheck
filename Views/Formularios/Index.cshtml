@@ -74,6 +74,11 @@
             $(document).ready(function () {
                    tabla = $('#tablaFormularios').DataTable();
                    cargarFormularios();
+
+                   const params = new URLSearchParams(window.location.search);
+                   if (params.get('mensaje') === 'guardado') {
+                       alert('Formulario guardado correctamente');
+                   }
             });
 
             function cargarFormularios() {
