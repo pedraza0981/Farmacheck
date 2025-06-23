@@ -1,11 +1,12 @@
 ﻿@model Farmacheck.Models.FormularioViewModel
 
 @{
-    ViewData["Title"] = "Crear Formulario";
+    var isEditing = Model.Id != 0;
+    ViewData["Title"] = isEditing ? "Editar Formulario" : "Crear Formulario";
 }
 
 <div class="container-fluid p-4">
-    <h4 class=" text-white p-3 rounded" style="background-color:#0c4c98">Crear Formulario</h4>
+    <h4 class=" text-white p-3 rounded" style="background-color:#0c4c98">@(isEditing ? "Editar Formulario" : "Crear Formulario")</h4>
     <form asp-action="ConfigurarFormulario" method="post">
         <!-- Fila: Nombre - Alias - Etiqueta - Estándar -->
         <fieldset class="border p-3 mb-4 rounded">

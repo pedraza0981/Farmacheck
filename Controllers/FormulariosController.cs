@@ -14,7 +14,7 @@ namespace Farmacheck.Controllers
         private static readonly List<SeccionInputModel> _inMemorySections = new();
         private static int _nextSectionId = 1;
 
-        public  static List<FormularioViewModel> _formularios = new List<FormularioViewModel>
+        public static List<FormularioViewModel> _formularios = new List<FormularioViewModel>
         {
             new FormularioViewModel { Id = 1, Nombre = "Actividades Día 1", Fecha = new DateTime(2024, 01, 15), EstaActivo = true },
             new FormularioViewModel { Id = 2, Nombre = "Caducidad y Merma - Pruebas", Fecha  = new DateTime(2024, 03, 01), EstaActivo = false },
@@ -181,7 +181,7 @@ namespace Farmacheck.Controllers
         }
 
         // --- Simulación de "BD" en memoria para secciones ---
-        
+
 
         // GET: /Formularios/ListarSecciones?formularioId=5
         [HttpGet]
@@ -212,37 +212,56 @@ namespace Farmacheck.Controllers
 
         // GET: /Formularios/ConfigurarFormulario
         [HttpGet]
-        public IActionResult ConfigurarFormulario()
+        [HttpGet]
+        public IActionResult ConfigurarFormulario(int? id)
         {
-            var nuevoFormulario = new FormularioViewModel
-            {
-                Fecha = DateTime.Now,
-                EstaActivo = true,
-                AuditoresDisponibles = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = "auditor1", Text = "Auditor 1" },
-                    new SelectListItem { Value = "auditor2", Text = "Auditor 2" }
-                },
-                AuditadosDisponibles = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = "auditado1", Text = "Auditado 1" },
-                    new SelectListItem { Value = "auditado2", Text = "Auditado 2" }
-                },
-                SupervisoresDisponibles = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = "supervisor1", Text = "Supervisor 1" },
-                    new SelectListItem { Value = "supervisor2", Text = "Supervisor 2" }
-                },
-                UnidadesDisponibles = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = "ventas", Text = "Ventas" },
-                    new SelectListItem { Value = "almacen", Text = "Almacén" },
-                    new SelectListItem { Value = "admin", Text = "Administración" }
-                }
-            };
+            FormularioViewModel nuevoFormulario = new FormularioViewModel();
 
+            if (id.HasValue)
+            {
+                var formulario = _formularios.FirstOrDefault(f => f.Id == id.Value);
+
+                if (formulario != null)
+                {
+                    ViewData["Title"] = "Editar Formulario";
+                    return View(formulario);
+                }
+            }
+
+            if (nuevoFormulario != null)
+            {
+                nuevoFormulario = new FormularioViewModel
+                {
+                    Fecha = DateTime.Now,
+                    EstaActivo = true,
+                    AuditoresDisponibles = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "auditor1", Text = "Auditor 1" },
+                        new SelectListItem { Value = "auditor2", Text = "Auditor 2" }
+                    },
+                            AuditadosDisponibles = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "auditado1", Text = "Auditado 1" },
+                        new SelectListItem { Value = "auditado2", Text = "Auditado 2" }
+                    },
+                            SupervisoresDisponibles = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "supervisor1", Text = "Supervisor 1" },
+                        new SelectListItem { Value = "supervisor2", Text = "Supervisor 2" }
+                    },
+                            UnidadesDisponibles = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "ventas", Text = "Ventas" },
+                        new SelectListItem { Value = "almacen", Text = "Almacén" },
+                        new SelectListItem { Value = "admin", Text = "Administración" }
+                    }
+                };
+            }
+
+            ViewData["Title"] = "Crear Formulario";
             return View(nuevoFormulario);
         }
+
 
         // POST: /Formularios/ConfigurarFormulario
         [HttpPost]
