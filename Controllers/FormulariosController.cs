@@ -295,6 +295,58 @@ namespace Farmacheck.Controllers
         }
 
         [HttpPost]
+        public JsonResult GuardarFormulario([FromBody] FormularioViewModel model)
+        {
+            if (model == null)
+                return Json(new { success = false, error = "Datos inválidos" });
+
+            if (model.Id == 0)
+            {
+                model.Id = _formularios.Any() ? _formularios.Max(f => f.Id) + 1 : 1;
+                model.Fecha = DateTime.Now;
+                _formularios.Add(model);
+
+                return Json(new { success = true, id = model.Id, message = "Formulario creado" });
+            }
+
+            var existente = _formularios.FirstOrDefault(f => f.Id == model.Id);
+            if (existente == null)
+                return Json(new { success = false, error = "Formulario no encontrado" });
+
+            existente.Nombre = model.Nombre;
+            existente.Alias = model.Alias;
+            existente.EtiquetaCampo = model.EtiquetaCampo;
+            existente.EstandarCompania = model.EstandarCompania;
+            existente.Auditor = model.Auditor;
+            existente.Auditado = model.Auditado;
+            existente.Supervisor = model.Supervisor;
+            existente.UnidadNegocio = model.UnidadNegocio;
+            existente.FirmaObligatoria = model.FirmaObligatoria;
+            existente.PersonalizarFirmas = model.PersonalizarFirmas;
+            existente.Etiqueta1 = model.Etiqueta1;
+            existente.Etiqueta2 = model.Etiqueta2;
+            existente.NotifCorreoFinRevision = model.NotifCorreoFinRevision;
+            existente.NotifCorreoBajoEstandar = model.NotifCorreoBajoEstandar;
+            existente.NotifPushBajoEstandar = model.NotifPushBajoEstandar;
+            existente.CorreosAdicionales = model.CorreosAdicionales;
+            existente.PushAdicionales = model.PushAdicionales;
+            existente.SustituirLogoPDF = model.SustituirLogoPDF;
+            existente.SustituirEmpresaPDF = model.SustituirEmpresaPDF;
+            existente.PlanesAccionAutomatico = model.PlanesAccionAutomatico;
+            existente.Categoria = model.Categoria;
+            existente.CaracterInformativo = model.CaracterInformativo;
+            existente.OcultarTareasPendientes = model.OcultarTareasPendientes;
+            existente.PermitirFotosGaleria = model.PermitirFotosGaleria;
+            existente.ActivarGeolocalizacion = model.ActivarGeolocalizacion;
+            existente.Publicar = model.Publicar;
+            existente.EsconderCalificacion = model.EsconderCalificacion;
+            existente.Rutinas = model.Rutinas;
+            existente.EstaActivo = model.EstaActivo;
+
+            return Json(new { success = true, id = model.Id, message = "Formulario actualizado" });
+        }
+
+        [HttpPost]
         public JsonResult EliminarFormulario(int id)
         {
             var formulario = _formularios.FirstOrDefault(f => f.Id == id);
