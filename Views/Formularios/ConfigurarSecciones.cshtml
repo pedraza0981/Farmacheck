@@ -80,7 +80,8 @@
         const baseUrl = '@Url.Action("Index", "Pregunta")';
 
         $(document).ready(function () {
-            cargarSecciones();
+            cargarSecciones();            
+            $('#tablaSecciones').DataTable();
 
             $('#btnNuevaSeccion').click(function () {
                 limpiarModal();
