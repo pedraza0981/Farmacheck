@@ -2,12 +2,13 @@
 
 @{
     var isEditing = Model.Id != 0;
-    ViewData["Title"] = isEditing ? "Editar Formulario" : "Crear Formulario";
+    ViewData["Title"] = isEditing ? "Actualizar" : "Guardar";
 }
 
 <div class="container-fluid p-4">
-    <h4 class=" text-white p-3 rounded" style="background-color:#0c4c98">@(isEditing ? "Editar Formulario" : "Crear Formulario")</h4>
-    <form asp-action="ConfigurarFormulario" method="post">
+    <h4 class=" text-white p-3 rounded" style="background-color:#0c4c98">@(isEditing ? "Actualizar Formulario" : "Guardar Formulario")</h4>
+    <form id="formFormulario">
+        <input type="hidden" asp-for="Id" />
         <!-- Fila: Nombre - Alias - Etiqueta - Estándar -->
         <fieldset class="border p-3 mb-4 rounded">
             <legend class="w-auto px-2 text-secondary">Datos Generales</legend>
@@ -221,8 +222,60 @@
 
         <!-- Botones -->
         <div class="form-group mt-4">
-            <button type="submit" class="btn btn-danger mr-2">GUARDAR</button>
+            <button type="button" id="btnGuardarFormulario" class="btn btn-danger mr-2">@(isEditing ? "Actualizar" : "Guardar")</button>
             <a href="@Url.Action("Index", "Formularios")" class="btn btn-dark">CANCELAR</a>
         </div>
     </form>
 </div>
+@section Scripts {
+    <script>
+        $('#btnGuardarFormulario').click(function () {
+            const data = {
+                Id: parseInt($('#Id').val() || 0),
+                Nombre: $('#Nombre').val(),
+                Alias: $('#Alias').val(),
+                EtiquetaCampo: $('#EtiquetaCampo').val(),
+                EstandarCompania: parseInt($('#EstandarCompania').val() || 0),
+                Auditor: $('#Auditor').val(),
+                Auditado: $('#Auditado').val(),
+                Supervisor: $('#Supervisor').val(),
+                UnidadNegocio: $('#UnidadNegocio').val(),
+                FirmaObligatoria: $('#FirmaObligatoria').is(':checked'),
+                PersonalizarFirmas: $('#PersonalizarFirmas').is(':checked'),
+                Etiqueta1: $('#Etiqueta1').val(),
+                Etiqueta2: $('#Etiqueta2').val(),
+                NotifCorreoFinRevision: $('#NotifCorreoFinRevision').is(':checked'),
+                NotifCorreoBajoEstandar: $('#NotifCorreoBajoEstandar').is(':checked'),
+                NotifPushBajoEstandar: $('#NotifPushBajoEstandar').is(':checked'),
+                CorreosAdicionales: $('#CorreosAdicionales').val(),
+                PushAdicionales: $('#PushAdicionales').val(),
+                SustituirLogoPDF: $('#SustituirLogoPDF').is(':checked'),
+                SustituirEmpresaPDF: $('#SustituirEmpresaPDF').is(':checked'),
+                PlanesAccionAutomatico: $('#PlanesAccionAutomatico').val(),
+                Categoria: $('#Categoria').val(),
+                CaracterInformativo: $('#CaracterInformativo').is(':checked'),
+                OcultarTareasPendientes: $('#OcultarTareasPendientes').is(':checked'),
+                PermitirFotosGaleria: $('#PermitirFotosGaleria').is(':checked'),
+                ActivarGeolocalizacion: $('#ActivarGeolocalizacion').is(':checked'),
+                Publicar: $('#Publicar').is(':checked'),
+                EsconderCalificacion: $('#EsconderCalificacion').is(':checked'),
+                Rutinas: $('#Rutinas').val()
+            };
+
+            $.ajax({
+                url: '@Url.Action("GuardarFormulario", "Formularios")',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (r) {
+                    if (r.success) {
+                        alert('Registro agregado correctamente');
+                        window.location.href = '@Url.Action("Index", "Formularios")';
+                    } else {
+                        alert(r.error || 'Error al guardar');
+                    }
+                }
+            });
+        });
+    </script>
+}
