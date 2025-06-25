@@ -8,3 +8,5 @@
 /.vs/ProjectEvaluation
 /.vs/Farmacheck/config
 *.user
+/.config
+/Properties
