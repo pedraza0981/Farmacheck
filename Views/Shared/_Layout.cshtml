@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Estilos locales -->
-    
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <!-- Iconos -->
@@ -24,17 +24,24 @@
     <div id="sidebar" class="sidebar text-white d-flex flex-column align-items-start" style="width: 240px; position: fixed; height: 100vh;">
         <!-- LOGO -->
         <div class="w-100 text-center p-3" style="background-color: white;">
-            <img src="~/images/Logo_Header.png" alt="Logo" style="max-height: 50px;" />            
+            <img src="~/images/Logo_Header.png" alt="Logo" style="max-height: 50px;" />
         </div>
-        
+
         <!-- MENÚ -->
         <div class="px-3 pt-3 w-100 flex-grow-1">
             <a asp-controller="UnidadDeNegocio" asp-action="Index" class="d-block py-2 text-white"><i class="bi bi-building me-2"></i> Unidades de negocio</a>
             <a href="#" class="d-block py-2 text-white"><i class="bi bi-geo-alt me-2"></i> Ubicaciones</a>
             <a href="#" class="d-block py-2 text-white"><i class="bi bi-person-badge me-2"></i> Roles</a>
             <a href="#" class="d-block py-2 text-white"><i class="bi bi-people me-2"></i> Usuarios</a>
-            <a href="#" class="d-block py-2 text-white"><i class="bi bi-ui-checks-grid me-2"></i> Formularios</a>
-            <a href="#" class="d-block py-2 text-white"><i class="bi bi-journal-text me-2"></i> Catálogos</a>
+            <a asp-controller="Formularios" asp-action="Index" class="d-block py-2 text-white">
+                <i class="bi bi-ui-checks-grid me-2"></i> Formularios
+            </a>
+            <a class="d-block py-2 text-white" data-bs-toggle="collapse" href="#submenuCatalogos" role="button" aria-expanded="false" aria-controls="submenuCatalogos"><i class="bi bi-journal-text me-2"></i> Catálogos</a>
+            <div class="collapse ps-3" id="submenuCatalogos">
+                <a asp-controller="UnidadDeNegocio" asp-action="Index" class="d-block py-2 text-white"><i class="bi bi-building me-2"></i> Unidades de Negocio</a>
+                <a asp-controller="Marca" asp-action="Index" class="d-block py-2 text-white"><i class="bi bi-tag me-2"></i> Marca</a>
+                <a asp-controller="SubMarca" asp-action="Index" class="d-block py-2 text-white"><i class="bi bi-tag-fill me-2"></i> Submarca</a>
+            </div>
             <a href="#" class="d-block py-2 text-white"><i class="bi bi-lightning me-2"></i> Sprints</a>
             <a href="#" class="d-block py-2 text-white"><i class="bi bi-megaphone me-2"></i> Campañas</a>
             <a href="#" class="d-block py-2 text-white"><i class="bi bi-envelope-paper me-2"></i> Mailing</a>
@@ -47,7 +54,7 @@
     <header class="ms-240" style="margin-left: 240px;">
         <nav class="navbar navbar-light bg-white border-bottom shadow-sm p-2">
             <div class="container-fluid d-flex align-items-center justify-content-between">
-                <button class="menu-toggle d-md-none me-2" aria-label="Abrir menú lateral" onclick="toggleSidebar()">☰</button>                
+                <button class="menu-toggle d-md-none me-2" aria-label="Abrir menú lateral" onclick="toggleSidebar()">☰</button>
                 <img src="~/images/Logo_HeaderBlank.png" style="height: 55px;" class="ms-auto" />
             </div>
             <img src="~/images/linea_header.png" style="width: 100%; height: auto; display: block; margin-top: 5px;" />
