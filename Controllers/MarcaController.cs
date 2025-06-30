@@ -1,65 +1,72 @@
 using Microsoft.AspNetCore.Mvc;
 using Farmacheck.Models;
-using Farmacheck.Infrastructure.Services;
-using AutoMapper;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Farmacheck.Controllers
 {
     public class MarcaController : Controller
     {
-        private readonly IBrandApiClient _apiClient;
-        private readonly IMapper _mapper;
+        private static readonly List<Marca> _marcas = new();
+        private static int _nextId = 1;
 
-        public MarcaController(IBrandApiClient apiClient, IMapper mapper)
-        {
-            _apiClient = apiClient;
-            _mapper = mapper;
-        }
-
-        public async Task<IActionResult> Index(int unidadId)
+        public IActionResult Index(int unidadId)
         {
             ViewBag.UnidadId = unidadId;
-            var apiData = await _apiClient.GetBrandsAsync();
-            var marcas = _mapper.Map<List<Marca>>(apiData);
-            var lista = marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
+            var lista = _marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
             return View(lista);
         }
 
         [HttpGet]
-        public async Task<JsonResult> Listar(int unidadId)
+        public JsonResult Listar(int unidadId)
         {
-            var apiData = await _apiClient.GetBrandsAsync();
-            var marcas = _mapper.Map<List<Marca>>(apiData);
-            var lista = marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
+            var lista = _marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
             return Json(new { success = true, data = lista });
         }
 
         [HttpGet]
-        public async Task<JsonResult> Obtener(int id)
+        public JsonResult Obtener(int id)
         {
-            var entidad = await _apiClient.GetBrandAsync(id);
+            var entidad = _marcas.FirstOrDefault(x => x.Id == id);
             if (entidad == null)
                 return Json(new { success = false, error = "No encontrado" });
 
-            var marca = _mapper.Map<Marca>(entidad);
-            return Json(new { success = true, data = marca });
+            return Json(new { success = true, data = entidad });
         }
 
         [HttpPost]
-        public async Task<JsonResult> Guardar([FromBody] Marca model)
+        public JsonResult Guardar([FromBody] Marca model)
         {
             if (string.IsNullOrWhiteSpace(model.Nombre))
                 return Json(new { success = false, error = "El nombre es obligatorio." });
 
-            var request = _mapper.Map<BrandRequest>(model);
-            var id = await _apiClient.CreateAsync(request);
-            return Json(new { success = true, id });
+            if (model.Id == 0)
+            {
+                model.Id = _nextId++;
+                _marcas.Add(model);
+            }
+            else
+            {
+                var existente = _marcas.FirstOrDefault(x => x.Id == model.Id);
+                if (existente == null)
+                    return Json(new { success = false, error = "No encontrado" });
+
+                existente.Nombre = model.Nombre;
+                existente.Logotipo = model.Logotipo;
+                existente.UnidadDeNegocioId = model.UnidadDeNegocioId;
+            }
+
+            return Json(new { success = true, id = model.Id });
         }
 
         [HttpPost]
-        public async Task<JsonResult> Eliminar(int id)
+        public JsonResult Eliminar(int id)
         {
-            await _apiClient.DeleteAsync(id);
+            var entidad = _marcas.FirstOrDefault(x => x.Id == id);
+            if (entidad == null)
+                return Json(new { success = false, error = "No encontrado" });
+
+            _marcas.Remove(entidad);
             return Json(new { success = true });
         }
     }
