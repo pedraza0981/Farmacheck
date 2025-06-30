@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Farmacheck.Models
 {
-    public class Marca
+    public class MarcaViewModel
     {
         public int Id { get; set; }
         public int UnidadDeNegocioId { get; set; }

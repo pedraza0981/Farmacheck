@@ -22,7 +22,7 @@ namespace Farmacheck.Controllers
             ViewBag.UnidadId = unidadId;
 
             var apiData = await _apiClient.GetBrandsAsync();
-            var marcas = _mapper.Map<List<Marca>>(apiData);
+            var marcas = _mapper.Map<List<MarcaViewModel>>(apiData);
             var lista = marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
 
             return View(lista);
@@ -32,7 +32,7 @@ namespace Farmacheck.Controllers
         public async Task<JsonResult> Listar(int unidadId)
         {
             var apiData = await _apiClient.GetBrandsAsync(); 
-            var marcas = _mapper.Map<List<Marca>>(apiData);
+            var marcas = _mapper.Map<List<MarcaViewModel>>(apiData);
             var lista = marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
 
             return Json(new { success = true, data = lista });
@@ -45,12 +45,12 @@ namespace Farmacheck.Controllers
             if (entidad == null)
                 return Json(new { success = false, error = "No encontrado" });
 
-            var marca = _mapper.Map<Marca>(entidad); 
+            var marca = _mapper.Map<MarcaViewModel>(entidad); 
             return Json(new { success = true, data = marca });
         }
 
         [HttpPost]
-        public async Task<JsonResult> Guardar([FromBody] Marca model)
+        public async Task<JsonResult> Guardar([FromBody] MarcaViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Nombre))
                 return Json(new { success = false, error = "El nombre es obligatorio." });

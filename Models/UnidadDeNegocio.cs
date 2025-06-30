@@ -7,6 +7,6 @@ namespace Farmacheck.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
 
-        public ICollection<Marca> Marcas { get; set; } = new List<Marca>();
+        public ICollection<MarcaViewModel> Marcas { get; set; } = new List<MarcaViewModel>();
     }
 }
