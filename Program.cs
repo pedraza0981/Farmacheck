@@ -13,7 +13,8 @@ namespace Farmacheck
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddAutoMapper(typeof(BrandProfile).Assembly);
+            //builder.Services.AddAutoMapper(typeof(BrandProfile).Assembly);
+            //builder.Services.AddAutoMapper(typeof(WebMappingProfile), typeof(BrandProfile));
             builder.Services.AddAutoMapper(typeof(WebMappingProfile), typeof(BrandProfile));
 
             builder.Services.AddHttpClient<IBrandApiClient, BrandApiClient>(client =>
