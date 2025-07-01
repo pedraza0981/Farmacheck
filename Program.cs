@@ -1,5 +1,7 @@
 using Farmacheck.Infrastructure.Services;
 using Farmacheck.Infrastructure.Interfaces;
+using Farmacheck.Application.Mappings;
+using Farmacheck.Helpers;
 namespace Farmacheck
 {
     public class Program
@@ -11,7 +13,9 @@ namespace Farmacheck
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-             builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddAutoMapper(typeof(BrandProfile).Assembly);
+            builder.Services.AddAutoMapper(typeof(WebMappingProfile), typeof(BrandProfile));
+
             builder.Services.AddHttpClient<IBrandApiClient, BrandApiClient>(client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["BrandApi:BaseUrl"]!);

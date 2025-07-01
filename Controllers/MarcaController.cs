@@ -4,6 +4,8 @@ using Farmacheck.Infrastructure.Services;
 using AutoMapper;
 using Farmacheck.Infrastructure.Interfaces;
 using Farmacheck.Infrastructure.Models.Brands;
+using static System.Net.Mime.MediaTypeNames;
+using Farmacheck.Application.DTOs;
 
 namespace Farmacheck.Controllers
 {
@@ -21,21 +23,26 @@ namespace Farmacheck.Controllers
         {
             ViewBag.UnidadId = unidadId;
 
-            var apiData = await _apiClient.GetBrandsAsync();
-            var marcas = _mapper.Map<List<MarcaViewModel>>(apiData);
-            var lista = marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
+            var apiData = await _apiClient.GetBrandsAsync(); 
+            var marcaDtos = _mapper.Map<List<MarcaDto>>(apiData); 
+            var marcas = _mapper.Map<List<MarcaViewModel>>(marcaDtos); 
 
-            return View(lista);
+            //var lista = marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
+
+            return View(marcas);
         }
 
         [HttpGet]
+        [HttpGet]
         public async Task<JsonResult> Listar(int unidadId)
         {
-            var apiData = await _apiClient.GetBrandsAsync(); 
-            var marcas = _mapper.Map<List<MarcaViewModel>>(apiData);
-            var lista = marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
+            var apiData = await _apiClient.GetBrandsAsync();
+            var marcaDtos = _mapper.Map<List<MarcaDto>>(apiData);
+            var marcas = _mapper.Map<List<MarcaViewModel>>(marcaDtos);
 
-            return Json(new { success = true, data = lista });
+            //var lista = marcas.Where(m => m.UnidadDeNegocioId == unidadId).ToList();
+
+            return Json(new { success = true, data = marcas });
         }
 
         [HttpGet]
